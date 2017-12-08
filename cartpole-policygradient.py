@@ -20,7 +20,7 @@ def policy_gradient():
         advantages = tf.placeholder("float",[None,1])
         linear = tf.matmul(state,params)
         probabilities = tf.nn.softmax(linear)
-        good_probabilities = tf.reduce_sum(tf.mul(probabilities, actions),reduction_indices=[1])
+        good_probabilities = tf.reduce_sum(tf.multiply(probabilities, actions),reduction_indices=[1])
         eligibility = tf.log(good_probabilities) * advantages
         loss = -tf.reduce_sum(eligibility)
         optimizer = tf.train.AdamOptimizer(0.01).minimize(loss)
@@ -53,7 +53,7 @@ def run_episode(env, policy_grad, value_grad, sess):
     update_vals = []
 
 
-    for _ in xrange(200):
+    for _ in range(200):
         # calculate policy
         obs_vector = np.expand_dims(observation, axis=0)
         probs = sess.run(pl_calculated,feed_dict={pl_state: obs_vector})
@@ -107,14 +107,14 @@ policy_grad = policy_gradient()
 value_grad = value_gradient()
 sess = tf.InteractiveSession()
 sess.run(tf.initialize_all_variables())
-for i in xrange(2000):
+for i in range(2000):
     reward = run_episode(env, policy_grad, value_grad, sess)
     if reward == 200:
         print "reward 200"
         print i
         break
 t = 0
-for _ in xrange(1000):
+for _ in range(1000):
     reward = run_episode(env, policy_grad, value_grad, sess)
     t += reward
 print t / 1000
